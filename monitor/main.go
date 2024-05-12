@@ -9,23 +9,25 @@ var DefaultQuery = api.Query{
 }
 
 type Monitor struct {
-	Domains   []string
-	Api       *api.SSLMateSearchAPI
-	BaseQuery *api.Query
+	Domains string
+	Api     *api.SSLMateSearchAPI
+	Query   *api.Query
 }
 
-func New(domains []string, api *api.SSLMateSearchAPI, base *api.Query) *Monitor {
+type Monitors []Monitor
+
+func New(domain string, base *api.Query, api *api.SSLMateSearchAPI) *Monitor {
 	return &Monitor{
-		Domains:   domains,
-		Api:       api,
-		BaseQuery: base,
+		Domains: domain,
+		Query:   base,
+		Api:     api,
 	}
 }
 
-func Default(domains []string) *Monitor {
+func Default(domain string) *Monitor {
 	return New(
-		domains,
-		api.Default(),
+		domain,
 		&DefaultQuery,
+		api.Default(),
 	)
 }

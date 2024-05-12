@@ -1,30 +1,39 @@
 package monitor
 
-import "crypto/x509"
+import (
+	"crypto/x509"
+
+	api "github.com/akakou/sslmate_cert_search_api"
+)
 
 type Callback func([]x509.Certificate, error)
 
-func (monitor *Monitor) Next() ([]x509.Certificate, error) {
+func (monitor *Monitor) Next() ([]x509.Certificate, *api.Index, error) {
 	result := []x509.Certificate{}
 
-	for _, domain := range monitor.Domains {
-		query := *monitor.BaseQuery
-		query.Domain = domain
-
-		certs, err := monitor.Api.Search(&query)
-		if err != nil {
-			return nil, err
-		}
-
-		result = append(result, certs...)
+	certs, index, err := monitor.Api.Search(monitor.Query)
+	if err != nil {
+		return nil, index, err
 	}
 
-	return result, nil
+	result = append(result, certs...)
+
+	return result, index, nil
 }
 
-func (monitor *Monitor) Run(callback Callback) error {
+func (monitor *Monitor) run(callback Callback) {
+	certs, _, err := monitor.Next()
+	callback(certs, err)
+}
+
+func (monitor *Monitor) Run(callback Callback) {
 	for {
-		certs, err := monitor.Next()
-		callback(certs, err)
+		monitor.run(callback)
+	}
+}
+
+func (monitors Monitors) Run(callback Callback) {
+	for _, monitor := range monitors {
+		monitor.Run(callback)
 	}
 }
