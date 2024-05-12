@@ -3,7 +3,7 @@ package monitor
 import (
 	"crypto/x509"
 
-	api "github.com/akakou/sslmate_cert_search_api"
+	api "github.com/akakou/sslmate-cert-search-api"
 )
 
 type Callback func([]x509.Certificate, error)
