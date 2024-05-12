@@ -17,6 +17,11 @@ type Query struct {
 	Expand            string
 }
 
+type Index struct {
+	First string
+	Last  string
+}
+
 type Json []map[string]interface{}
 
 type SSLMateSearchAPI struct {

@@ -34,7 +34,7 @@ func TestSearch(t *testing.T) {
 		Expand:            "",
 	}
 
-	certs, err := api.Search(&query)
+	certs, _, err := api.Search(&query)
 	if err != nil {
 		t.Fatalf("failed to search certs: %v", err)
 	}

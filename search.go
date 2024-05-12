@@ -74,23 +74,28 @@ func (api *SSLMateSearchAPI) SearchSSLMateCerts(query *Query) ([]SSLMateCert, er
 	return result, err
 }
 
-func (api *SSLMateSearchAPI) Search(query *Query) ([]x509.Certificate, error) {
+func (api *SSLMateSearchAPI) Search(query *Query) ([]x509.Certificate, *Index, error) {
 	var result []x509.Certificate
 	var sslmateCerts []SSLMateCert
 
 	sslmateCerts, err := api.SearchSSLMateCerts(query)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	for _, c := range sslmateCerts {
 		raw, _ := base64.StdEncoding.DecodeString(c.RawCert)
 		x509Cert, err := x509.ParseCertificate(raw)
 		if err != nil {
-			return nil, fmt.Errorf("%v: %v", ERROR_FAILED_TO_PARSE_CERT, err)
+			return nil, nil, fmt.Errorf("%v: %v", ERROR_FAILED_TO_PARSE_CERT, err)
 		}
 		result = append(result, *x509Cert)
 	}
 
-	return result, nil
+	index := Index{
+		First: sslmateCerts[0].Id,
+		Last:  sslmateCerts[len(sslmateCerts)-1].Id,
+	}
+
+	return result, &index, nil
 }
