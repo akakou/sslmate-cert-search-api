@@ -1,4 +1,4 @@
-package sslmatecertsearchapi
+package api
 
 import (
 	"crypto/x509"

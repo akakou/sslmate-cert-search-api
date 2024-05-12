@@ -1,6 +1,6 @@
 package monitor
 
-import api "github.com/akakou/sslmate-cert-search-api"
+import "github.com/akakou/sslmate-cert-search-api/api"
 
 var DefaultQuery = api.Query{
 	IncludeSubdomains: true,

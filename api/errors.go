@@ -1,4 +1,4 @@
-package sslmatecertsearchapi
+package api
 
 const (
 	ERROR_SERVER_RETURN_NOT_200  = "server returned an error"
