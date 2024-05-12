@@ -16,18 +16,19 @@ type Monitor struct {
 
 type Monitors []Monitor
 
-func New(domain string, base *api.Query, api *api.SSLMateSearchAPI) *Monitor {
+func New(base *api.Query, api *api.SSLMateSearchAPI) *Monitor {
 	return &Monitor{
-		Domains: domain,
-		Query:   base,
-		Api:     api,
+		Query: base,
+		Api:   api,
 	}
 }
 
 func Default(domain string) *Monitor {
+	query := DefaultQuery
+	query.Domain = domain
+
 	return New(
-		domain,
-		&DefaultQuery,
+		&query,
 		api.Default(),
 	)
 }
