@@ -6,7 +6,7 @@ import (
 	"github.com/akakou/sslmate-cert-search-api/api"
 )
 
-const DEFAULT_SLEEP = time.Minute * 5
+const DEFAULT_SLEEP = time.Second * 20
 
 var DefaultQuery = api.Query{
 	IncludeSubdomains: true,
@@ -23,20 +23,21 @@ type Monitor struct {
 
 type Monitors []Monitor
 
-func New(base *api.Query, api *api.SSLMateSearchAPI) *Monitor {
+func newMonitor(base *api.Query, api *api.SSLMateSearchAPI, sleep time.Duration) *Monitor {
 	return &Monitor{
 		Query: base,
 		Api:   api,
-		Sleep: DEFAULT_SLEEP,
+		Sleep: sleep,
 	}
 }
 
-func Default(domain string) *Monitor {
+func DefaultMonitor(domain string) *Monitor {
 	query := DefaultQuery
 	query.Domain = domain
 
-	return New(
+	return newMonitor(
 		&query,
 		api.Default(),
+		DEFAULT_SLEEP,
 	)
 }
