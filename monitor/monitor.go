@@ -24,22 +24,26 @@ func (monitor *Monitor) Next() ([]x509.Certificate, *api.Index, error) {
 	return result, index, nil
 }
 
-func (monitor *Monitor) run(callback Callback) {
+func (monitor *Monitor) nextWithCallbackAndSleep(callback Callback) {
 	time.Sleep(monitor.Sleep)
 	certs, last, err := monitor.Next()
 	callback(certs, last, err)
 }
 
-func (monitor *Monitor) Run(callback Callback) {
+func (monitor *Monitor) Loop(callback Callback) {
 	for {
-		monitor.run(callback)
+		monitor.nextWithCallbackAndSleep(callback)
 	}
 }
 
-func (monitors *Monitors) Run(callback Callback) {
+func (monitors *Monitors) Next(callback Callback) {
+	for _, monitor := range monitors.Monitors {
+		monitor.nextWithCallbackAndSleep(callback)
+	}
+}
+
+func (monitors *Monitors) Loop(callback Callback) {
 	for {
-		for _, monitor := range monitors.Monitors {
-			monitor.run(callback)
-		}
+		monitors.Next(callback)
 	}
 }

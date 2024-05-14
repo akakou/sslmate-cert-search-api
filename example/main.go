@@ -13,15 +13,14 @@ import (
 const DEBUG_SLEEP = time.Second * 20
 
 func main() {
-
-	m2 := monitor.DefaultMonitor("ochanoco.com")
+	m2 := monitor.DefaultMonitor("ochano.co")
 	m2.Sleep = DEBUG_SLEEP
 
 	monitors := monitor.Monitors{
 		Monitors: []monitor.Monitor{*m2},
 	}
 
-	monitors.Run(func(certs []x509.Certificate, index *api.Index, err error) {
+	monitors.Loop(func(certs []x509.Certificate, index *api.Index, err error) {
 		if err != nil {
 			log.Fatalf("failed to get certs	: %v", err)
 		}
