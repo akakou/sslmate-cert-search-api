@@ -6,7 +6,7 @@ import (
 	"github.com/akakou/sslmate-cert-search-api/api"
 )
 
-type Callback func([]x509.Certificate, error)
+type Callback func([]x509.Certificate, *api.Index, error)
 
 func (monitor *Monitor) Next() ([]x509.Certificate, *api.Index, error) {
 	result := []x509.Certificate{}
@@ -22,8 +22,8 @@ func (monitor *Monitor) Next() ([]x509.Certificate, *api.Index, error) {
 }
 
 func (monitor *Monitor) run(callback Callback) {
-	certs, _, err := monitor.Next()
-	callback(certs, err)
+	certs, last, err := monitor.Next()
+	callback(certs, last, err)
 }
 
 func (monitor *Monitor) Run(callback Callback) {
