@@ -2,6 +2,7 @@ package monitor
 
 import (
 	"crypto/x509"
+	"time"
 
 	"github.com/akakou/sslmate-cert-search-api/api"
 )
@@ -17,6 +18,8 @@ func (monitor *Monitor) Next() ([]x509.Certificate, *api.Index, error) {
 	}
 
 	result = append(result, certs...)
+
+	time.Sleep(monitor.Sleep)
 
 	return result, index, nil
 }
