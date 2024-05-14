@@ -19,12 +19,13 @@ func (monitor *Monitor) Next() ([]x509.Certificate, *api.Index, error) {
 
 	result = append(result, certs...)
 
-	time.Sleep(monitor.Sleep)
+	monitor.Query.After = index.Last
 
 	return result, index, nil
 }
 
 func (monitor *Monitor) run(callback Callback) {
+	time.Sleep(monitor.Sleep)
 	certs, last, err := monitor.Next()
 	callback(certs, last, err)
 }
@@ -36,7 +37,9 @@ func (monitor *Monitor) Run(callback Callback) {
 }
 
 func (monitors Monitors) Run(callback Callback) {
-	for _, monitor := range monitors {
-		monitor.Run(callback)
+	for {
+		for _, monitor := range monitors {
+			monitor.run(callback)
+		}
 	}
 }
