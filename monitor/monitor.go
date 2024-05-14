@@ -36,7 +36,7 @@ func (monitor *Monitor) Run(callback Callback) {
 	}
 }
 
-func (monitors Monitors) Run(callback Callback) {
+func (monitors *Monitors) Run(callback Callback) {
 	for {
 		for _, monitor := range monitors.Monitors {
 			monitor.run(callback)
