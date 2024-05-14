@@ -2,7 +2,6 @@ package monitor
 
 import (
 	"crypto/x509"
-	"fmt"
 	"time"
 
 	"github.com/akakou/sslmate-cert-search-api/api"
@@ -39,10 +38,8 @@ func (monitor *Monitor) Run(callback Callback) {
 
 func (monitors Monitors) Run(callback Callback) {
 	for {
-		fmt.Println("start monitoring...")
 		for _, monitor := range monitors.Monitors {
 			monitor.run(callback)
 		}
-		fmt.Println("end monitoring...")
 	}
 }
