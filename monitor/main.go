@@ -6,7 +6,7 @@ import (
 	"github.com/akakou/sslmate-cert-search-api/api"
 )
 
-const DEFAULT_SLEEP = time.Second * 20
+const DEFAULT_SLEEP = time.Second * 100 // free plan limitation
 
 var DefaultQuery = api.Query{
 	IncludeSubdomains: true,
