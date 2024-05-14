@@ -15,10 +15,9 @@ var DefaultQuery = api.Query{
 }
 
 type Monitor struct {
-	Domains string
-	Api     *api.SSLMateSearchAPI
-	Query   *api.Query
-	Sleep   time.Duration
+	Api   *api.SSLMateSearchAPI
+	Query *api.Query
+	Sleep time.Duration
 }
 
 type Monitors []Monitor
