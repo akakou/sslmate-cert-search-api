@@ -13,13 +13,13 @@ import (
 const DEBUG_SLEEP = time.Second * 20
 
 func main() {
-	m1 := monitor.DefaultMonitor("example.com")
-	m1.Sleep = DEBUG_SLEEP
 
 	m2 := monitor.DefaultMonitor("ochanoco.com")
 	m2.Sleep = DEBUG_SLEEP
 
-	monitors := monitor.Monitors([]monitor.Monitor{*m1, *m2})
+	monitors := monitor.Monitors{
+		Monitors: []monitor.Monitor{*m2},
+	}
 
 	monitors.Run(func(certs []x509.Certificate, index *api.Index, err error) {
 		if err != nil {

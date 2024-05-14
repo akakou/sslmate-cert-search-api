@@ -20,7 +20,9 @@ type Monitor struct {
 	Sleep time.Duration
 }
 
-type Monitors []Monitor
+type Monitors struct {
+	Monitors []Monitor
+}
 
 func newMonitor(base *api.Query, api *api.SSLMateSearchAPI, sleep time.Duration) *Monitor {
 	return &Monitor{
