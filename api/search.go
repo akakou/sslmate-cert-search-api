@@ -11,6 +11,8 @@ import (
 )
 
 func search[T any](any T, query *Query, api *SSLMateSearchAPI) error {
+	fmt.Print("Searching...\n")
+
 	url, _ := url.Parse(SSLMATE_API_URL)
 	urlQuery := url.Query()
 
@@ -92,9 +94,18 @@ func (api *SSLMateSearchAPI) Search(query *Query) ([]x509.Certificate, *Index, e
 		result = append(result, *x509Cert)
 	}
 
-	index := Index{
-		First: sslmateCerts[0].Id,
-		Last:  sslmateCerts[len(sslmateCerts)-1].Id,
+	var index Index
+
+	if len(result) != 0 {
+		index = Index{
+			First: sslmateCerts[0].Id,
+			Last:  sslmateCerts[len(sslmateCerts)-1].Id,
+		}
+	} else {
+		index = Index{
+			First: query.After,
+			Last:  query.After,
+		}
 	}
 
 	return result, &index, nil
