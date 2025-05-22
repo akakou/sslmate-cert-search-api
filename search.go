@@ -1,8 +1,6 @@
 package sslmate_cert_search_api
 
 import (
-	"crypto/x509"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -27,7 +25,6 @@ func search[T any](any T, query *Query, api *SSLMateSearchAPI) error {
 		Method: http.MethodGet,
 		URL:    url,
 		Header: http.Header{
-			// "Authorization": []string{fmt.Sprintf("Bearer %s", api.Token)},
 			"Content-Type": []string{"application/json"},
 		},
 	}
@@ -60,42 +57,26 @@ func search[T any](any T, query *Query, api *SSLMateSearchAPI) error {
 	return err
 }
 
-func (api *SSLMateSearchAPI) SearchJsonCerts(query *Query) (Json, error) {
-	var result Json
-	err := search(&result, query, api)
-	return result, err
-}
+func (api *SSLMateSearchAPI) Search(query *Query) ([]SSLMateCertEntry, error) {
+	var result []SSLMateCertEntry
+	var json []SSLMateCertJson
 
-func (api *SSLMateSearchAPI) SearchSSLMateCerts(query *Query) ([]SSLMateCert, error) {
 	query.Expand = "cert_der"
 
-	var result []SSLMateCert
-	err := search(&result, query, api)
-	return result, err
-}
-
-func (api *SSLMateSearchAPI) Search(query *Query) ([]x509.Certificate, *Index, error) {
-	var result []x509.Certificate
-	var sslmateCerts []SSLMateCert
-
-	sslmateCerts, err := api.SearchSSLMateCerts(query)
+	err := search(&json, query, api)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	for _, c := range sslmateCerts {
-		raw, _ := base64.StdEncoding.DecodeString(c.RawCert)
-		x509Cert, err := x509.ParseCertificate(raw)
+	for _, j := range json {
+		cert, err := convertJsonToEntry(&j)
+
 		if err != nil {
-			return nil, nil, fmt.Errorf("%v: %v", ERROR_FAILED_TO_PARSE_CERT, err)
+			return nil, err
 		}
-		result = append(result, *x509Cert)
+
+		result = append(result, *cert)
 	}
 
-	index := Index{
-		First: sslmateCerts[0].Id,
-		Last:  sslmateCerts[len(sslmateCerts)-1].Id,
-	}
-
-	return result, &index, nil
+	return result, nil
 }

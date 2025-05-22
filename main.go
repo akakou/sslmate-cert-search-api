@@ -1,12 +1,20 @@
 package sslmate_cert_search_api
 
-import "os"
+import (
+	"crypto/x509"
+	"os"
+)
 
 const SSLMATE_API_URL = "https://api.certspotter.com/v1/issuances"
 
-type SSLMateCert struct {
+type SSLMateCertJson struct {
 	Id      string `json:"id"`
 	RawCert string `json:"cert_der"`
+}
+
+type SSLMateCertEntry struct {
+	Id   int
+	Cert *x509.Certificate
 }
 
 type Query struct {
